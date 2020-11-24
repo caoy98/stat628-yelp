@@ -1,12 +1,9 @@
-# Goal: Explore businesses that serve Chinese food on Yelp and gather insights about the Chinese food businesses through Yelp reviews.
-# Data cleaning
 rm(list=ls())
 
 library(tidytext)
 library(dplyr)
 library(stringr)
 library(plyr)
-
 original_data <- read.csv("chinese_review.csv",header = TRUE, sep=",")
 head(original_data)
 
@@ -26,7 +23,9 @@ freq <- count(tidy_data$word)
 
 # Filter words with less than 10 frequency
 words <- freq$x[freq$freq > 10]
-tidy_data <- tidy_data %>% subset(tidy_data$word %in% words)
+words <- words[!str_sub(words,1,1) %in% c(0:9)]
+tidy_data <- tidy_data %>% 
+  subset(tidy_data$word %in% words)
 
 # Create a review-to-word n x p matrix with n reviews, p words
 p <- length(words)
@@ -43,3 +42,5 @@ for (i in 1:n){
 
 review_word_matrix <- matrix(unlist(review_word_list),nrow = n)
 colnames(review_word_matrix) <- words
+
+# Distribution of specific words 
