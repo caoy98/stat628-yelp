@@ -1,22 +1,45 @@
 # Goal: Explore businesses that serve Chinese food on Yelp and gather insights about the Chinese food businesses through Yelp reviews.
 # Data cleaning
 rm(list=ls())
-# (Filter businesses(and associated reviews) with key words "Chinese" from Yelp fusion API)
+
+library(tidytext)
+library(dplyr)
+library(stringr)
+library(plyr)
+
 original_data <- read.csv("chinese_review.csv",header = TRUE, sep=",")
 head(original_data)
-n <- nrow(original_data)
-m <- length(unique(original_data$business_id))
+
+text <- original_data$text
+review_id <- original_data$review_id
+split_data <- original_data %>% 
+  data.frame() %>%
+  select(review_id,text)
 
 # For each review, create a word frequency vector via tokenization (R’s tidytext): p words
-library(dplyr)
-library(tidytext)
-
-original_df <- data.frame(original_data)
-tidy_data <- original_df %>% unnest_tokens(word,text,drop = FALSE)
-
 # Filter stopwords, stemming words and words with low frequency across reviews
-my_stopwords <- tibble(word = c(as.character(1:100)))
-word_freq <- tidy_data %>% count(word,sort = TRUE)
-lowfre_words <- tibble(word = word_freq$word[which(word_freq$n<10)])
-tidy_data <- tidy_data %>% anti_join(stop_words) %>% anti_join(my_stopwords) %>% anti_join(lowfre_words)
+tidy_data <- split_data %>% 
+  unnest_tokens(word,text) %>%
+  anti_join(stop_words)
 
+freq <- count(tidy_data$word)
+
+# Filter words with less than 10 frequency
+words <- freq$x[freq$freq > 10]
+tidy_data <- tidy_data %>% subset(tidy_data$word %in% words)
+
+# Create a review-to-word n x p matrix with n reviews, p words
+p <- length(words)
+n <- length(text)
+
+review_word_list <- list()
+
+for (i in 1:n){
+  index <- which(words %in% tidy_data$word[(tidy_data$review_id==review_id[i])])
+  v <- rep(0,p)
+  v[index] <- count(tidy_data$word[(tidy_data$review_id==review_id[i])])$freq
+  review_word_list[[i]] <- v
+}
+
+review_word_matrix <- matrix(unlist(review_word_list),nrow = n)
+colnames(review_word_matrix) <- words
