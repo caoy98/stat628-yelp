@@ -1,7 +1,7 @@
 ######## Step1: Loading Data and Select Key Words ########
 
 #a.read Chinese restaurants review file and load packages
-library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(magrittr)
+library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(magrittr); library(rlist)
 ch_review = read.csv("chinese_review.csv", stringsAsFactors = F)
 
 #b.Targeted Words and Associated Adjective
@@ -50,15 +50,42 @@ times_meat <- data.frame(count=c(556, 712, 499, 209, 24, 85, 135, 521, 575),
 ggplot(data=times_meat,aes(x=meat,y=count))+ geom_bar(stat="identity")
 
 #b. Barplot for Restaurants with Different Stars
-for (j in meat){
-  nam = paste(j,"_stars",sep="")
-  for (i in 1:5){
-    a = j[j$stars == i,]
-    b = nrow(a)
-    c = rbind(c,b)
-    assign(nam, c)
-  }
-}
+#(1). Beef
+beef_stars = data.frame()
+for (i in 1:5){a = beef[beef$stars == i,];b = nrow(a);beef_stars[i,1] = b;nam = paste("star_",i,sep="");beef_stars[i,2] = nam}
+ggplot(data=beef_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
 
+#(2). Chicken
+chicken_stars = data.frame()
+for (i in 1:5){a = chicken[chicken$stars == i,];b = nrow(a);chicken_stars[i,1] = b;nam = paste("star_",i,sep="");chicken_stars[i,2] = nam}
+ggplot(data=chicken_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
 
+#(3). Crab
+crab_stars = data.frame()
+for (i in 1:5){a = crab[crab$stars == i,];b = nrow(a);crab_stars[i,1] = b;nam = paste("star_",i,sep="");crab_stars[i,2] = nam}
+ggplot(data=crab_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
 
+#(4). Duck
+duck_stars = data.frame()
+for (i in 1:5){a = duck[duck$stars == i,];b = nrow(a);duck_stars[i,1] = b;nam = paste("star_",i,sep="");duck_stars[i,2] = nam}
+ggplot(data=duck_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
+
+#(5). Lamb
+lamb_stars = data.frame()
+for (i in 1:5){a = lamb[lamb$stars == i,];b = nrow(a);lamb_stars[i,1] = b;nam = paste("star_",i,sep="");lamb_stars[i,2] = nam}
+ggplot(data=lamb_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
+
+#(6). Lobster
+lobster_stars = data.frame()
+for (i in 1:5){a = lobster[lobster$stars == i,];b = nrow(a);lobster_stars[i,1] = b;nam = paste("star_",i,sep="");lobster_stars[i,2] = nam}
+ggplot(data=lobster_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
+
+#(7). Pork
+pork_stars = data.frame()
+for (i in 1:5){a = pork[pork$stars == i,];b = nrow(a);pork_stars[i,1] = b;nam = paste("star_",i,sep="");pork_stars[i,2] = nam}
+ggplot(data=pork_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
+
+#(8). Shrimp
+shrimp_stars = data.frame()
+for (i in 1:5){a = shrimp[shrimp$stars == i,];b = nrow(a);shrimp_stars[i,1] = b;nam = paste("star_",i,sep="");shrimp_stars[i,2] = nam}
+ggplot(data=shrimp_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
