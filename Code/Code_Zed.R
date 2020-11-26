@@ -1,11 +1,11 @@
 ######## Step1: Loading Data and Select Key Words ########
 
 #a.read Chinese restaurants review file and load packages
-library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(magrittr); library(rlist)
+library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(magrittr); library(rlist);library(gridExtra)
 ch_review = read.csv("chinese_review.csv", stringsAsFactors = F)
 
 #b.Targeted Words and Associated Adjective
-meat = c("beef", "shrimp", "pork", "chicken", "crab", "duck", "lamb", "lobster") #Question: How to find the undesirable words?
+meat = c("beef", "shrimp", "pork", "chicken","frog", "crab", "duck", "lamb", "lobster") #Question: How to find the undesirable words?
 
 
 #c.Tokenization and Getting Rid of The Stop Words
@@ -45,8 +45,9 @@ for (i in meat){
    a = nrow(com_meats[com_meats$word == i & com_meats$stars == j,])
    b = nrow(com_meats[com_meats$word == i,])
    freq = a/b
-   c = c(j,i,fre)
-   com_fre[nrow(com_fre)+1<-c
+   c = paste("star",j,sep="")
+   d = c(c,i,freq)
+   com_fre[nrow(com_fre)+1,]<-d
   }
 }
 
@@ -66,42 +67,24 @@ times_meat <- data.frame(count=c(556, 712, 499, 209, 24, 85, 135, 521, 575),
 ggplot(data=times_meat,aes(x=meat,y=count))+ geom_bar(stat="identity")
 
 #b. Barplot for Restaurants with Different Stars
-#(1). Beef
-beef_stars = data.frame()
-for (i in 1:5){a = beef[beef$stars == i,];b = nrow(a);beef_stars[i,1] = b;nam = paste("star_",i,sep="");beef_stars[i,2] = nam}
-ggplot(data=beef_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
 
-#(2). Chicken
-chicken_stars = data.frame()
-for (i in 1:5){a = chicken[chicken$stars == i,];b = nrow(a);chicken_stars[i,1] = b;nam = paste("star_",i,sep="");chicken_stars[i,2] = nam}
-ggplot(data=chicken_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
-
-#(3). Crab
-crab_stars = data.frame()
-for (i in 1:5){a = crab[crab$stars == i,];b = nrow(a);crab_stars[i,1] = b;nam = paste("star_",i,sep="");crab_stars[i,2] = nam}
-ggplot(data=crab_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
-
-#(4). Duck
-duck_stars = data.frame()
-for (i in 1:5){a = duck[duck$stars == i,];b = nrow(a);duck_stars[i,1] = b;nam = paste("star_",i,sep="");duck_stars[i,2] = nam}
-ggplot(data=duck_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
-
-#(5). Lamb
-lamb_stars = data.frame()
-for (i in 1:5){a = lamb[lamb$stars == i,];b = nrow(a);lamb_stars[i,1] = b;nam = paste("star_",i,sep="");lamb_stars[i,2] = nam}
-ggplot(data=lamb_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
-
-#(6). Lobster
-lobster_stars = data.frame()
-for (i in 1:5){a = lobster[lobster$stars == i,];b = nrow(a);lobster_stars[i,1] = b;nam = paste("star_",i,sep="");lobster_stars[i,2] = nam}
-ggplot(data=lobster_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
-
-#(7). Pork
-pork_stars = data.frame()
-for (i in 1:5){a = pork[pork$stars == i,];b = nrow(a);pork_stars[i,1] = b;nam = paste("star_",i,sep="");pork_stars[i,2] = nam}
-ggplot(data=pork_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
-
-#(8). Shrimp
-shrimp_stars = data.frame()
-for (i in 1:5){a = shrimp[shrimp$stars == i,];b = nrow(a);shrimp_stars[i,1] = b;nam = paste("star_",i,sep="");shrimp_stars[i,2] = nam}
-ggplot(data=shrimp_stars,aes(x=V2,y=V1))+ geom_bar(stat="identity")
+a = com_fre[com_fre$meat == "beef",]
+b = com_fre[com_fre$meat == "chicken",]
+c = com_fre[com_fre$meat == "crab",]
+d = com_fre[com_fre$meat == "duck",]
+e = com_fre[com_fre$meat == "frog",]
+f = com_fre[com_fre$meat == "lamb",]
+g = com_fre[com_fre$meat == "lobster",]
+h = com_fre[com_fre$meat == "pork",]
+i = com_fre[com_fre$meat == "shrimp",]
+barplot(a,main="beef",xlab="stars",ylab="Frequency")
+p1=ggplot(data=a,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p2=ggplot(data=b,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p3=ggplot(data=c,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p4=ggplot(data=d,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p5=ggplot(data=e,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p6=ggplot(data=f,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p7=ggplot(data=g,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p8=ggplot(data=h,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+p9=ggplot(data=i,aes(x=stars,y=frequency))+ geom_bar(stat="identity")
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol=4)
