@@ -16,7 +16,7 @@ ch_filtered <- ch_review %>%
   filter(nchar(word) > 3) #Notice: Don't forget to add the undesirable words
 ch_filtered = select(ch_filtered, business_id, stars, category, word)
 
-#d.Select Distinct Targeted Words
+#d.Select Targeted Words
 target <- function(x){
   ch_filtered %>% 
   filter(word == x) %>%
@@ -29,12 +29,28 @@ for(i in meat){
   assign(nam, target(i))
 }
 
+com_meats = rbind(beef,chicken,crab,duck,lamb,lobster,pork,shrimp)
+com_fre = data.frame(matrix(ncol=3, nrow=0), stringsAsFactors = FALSE)
+x<-c("stars", "meat", "frequency")
+colnames(com_fre) <- x
+
 ######## Step 2: Created Data Frame for Word Frequency ########
 
 #a.Get Rid of Words Appearing Less Than 10 Times on Reviews
 ch_filtered = ch_filtered[ch_filtered$word %in% names(which(table(ch_filtered$word) > 10)), ]
 
-#b.Find Associated Words
+#b.Calculated Word Frequency Under Different Levels of Stars
+for (i in meat){
+  for (j in 1:5){
+   a = nrow(com_meats[com_meats$word == i & com_meats$stars == j,])
+   b = nrow(com_meats[com_meats$word == i,])
+   freq = a/b
+   c = c(j,i,fre)
+   com_fre[nrow(com_fre)+1<-c
+  }
+}
+
+#c.Find Associated Words
 ch_adj = ch_filtered$word %>%
   filter(ch_filtered$word %in% c("Adjective")) %>%
   unique
