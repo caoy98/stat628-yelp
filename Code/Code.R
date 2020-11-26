@@ -1,58 +1,17 @@
 # read Chinese restaurants review file and load packages
-library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(magrittr); library(tidyr)
+library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(tidyr)
 ch_review = read.csv("chinese_review.csv", stringsAsFactors = F)
 ch_review$stars = as.factor(ch_review$stars)
-theme_text = function() 
-{
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.text.x = element_blank(), 
-        axis.ticks = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.position = "none")
-}
 
 # undesirable_words and target taste words
 undesirable_words = c("food", "chinese", "restaurant", "chicken", 
                       "restaurants") # These words basically are in similar probabilities for all stars
 taste_words = c("sweet", "sour", "salty", "spicy", "bitter")
 
-######### single words (n*p matrix) ##############
+######### single words and bigrams (n*p matrix from Yuxiao) ##############
 
-simple_review = ch_review %>% select(review_id, stars, text, category)
-
-simple_review_filtered = simple_review %>% 
-  unnest_tokens(word, text) %>%
-  anti_join(stop_words) %>%
-  distinct() %>%
-  filter(nchar(word) > 10) %>%
-  filter(!word %in% undesirable_words) %>%
-  fastDummies::dummy_cols(select_columns = "word") %>%
-  select(-c(5:21)) %>%
-  select(-word)
-
-onestar = filter(simple_review_filtered, simple_review_filtered$stars==1) %>%
-  group_by(review_id, stars) %>%
-  summarise(across(starts_with('word'), sum))
-
-twostar = filter(simple_review_filtered, simple_review_filtered$stars==2) %>%
-  group_by(review_id, stars) %>%
-  summarise(across(starts_with('word'), sum))
-
-threestar = filter(simple_review_filtered, simple_review_filtered$stars==3) %>%
-  group_by(review_id, stars) %>%
-  summarise(across(starts_with('word'), sum))
-
-fourstar = filter(simple_review_filtered, simple_review_filtered$stars==4) %>%
-  group_by(review_id, stars) %>%
-  summarise(across(starts_with('word'), sum))
-
-fivestar = filter(simple_review_filtered, simple_review_filtered$stars==5) %>%
-  group_by(review_id, stars) %>%
-  summarise(across(starts_with('word'), sum))
-
-final_review_filtered = rbind(onestar, twostar, threestar, fourstar, fivestar)
-
+wordList <- c("sweet","sour","spicy","salty")
+plotWordStar(stars = stars,DTM = review_word_df,wordList = wordList)
 
 #########  words ###############
 
@@ -158,14 +117,14 @@ popular_bigrams = review_bigrams %>%
   mutate(row = row_number()) 
 
 popular_bigrams %>%
-  ggplot(aes(row, prob, fill = stars)) +
+  ggplot(aes(row, n, fill = stars)) +
   geom_col(show.legend = NULL) +
   labs(x = NULL, y = "Song Count") +
-  ylim(0,0.015) +
   ggtitle("Popular Words by Chart Level") + 
-  theme_text() +  
+  theme_classic() +  
   facet_wrap(~stars, scales = "free") +
   scale_x_continuous(  # This handles replacement of row 
     breaks = popular_bigrams$row, # notice need to reuse data frame
     labels = popular_bigrams$bigram) +
   coord_flip()
+
