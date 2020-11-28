@@ -1,12 +1,9 @@
-library(shiny)
-library(shinydashboard)
-
 dashboardPage(
   # title
-  dashboardHeader(title = "Yelp for Chinese Restaurant", titleWidth = 350),
+  dashboardHeader(title = "Yelp for Chinese Restaurant", titleWidth = 300),
   # sidebar
   dashboardSidebar(
-    width = 350,
+    width = 300,
     sidebarMenu(
     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
     menuItem("Contact Us", tabName = "contact", icon = icon("comment")),
@@ -27,19 +24,21 @@ dashboardPage(
             )
           ),
           # Input box 
-          box(title = "Choose your interested attributes", status = "primary",
-            selectInput("attInput", "Choose an attribute", 
-                        choices = list("Take Out"="RestaurantsTakeOut"))
+          box(title = "Choose your interested attribute", status = "primary",
+           #selectInput("attInput", "Choose an attribute", 
+           #            choices = list("Take Out"="RestaurantsTakeOut"))
+            varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)])
           ),
           
           # Result box 
-          box(title = "Result", status = "primary",
+          box(title = "Comparison of your chosen attribute", status = "primary",
               plotOutput("attribute")
-          ),
-          
-          # Suggestion box
-          box(
-            title = "Suggestion"
+          )
+        ),
+        fluidRow(
+          # Suggestions
+        column(width = 12,
+          box(title = "Our suggestions for you", status = "primary", width = NULL)
           )
         )
       ),
