@@ -12,7 +12,14 @@ dashboardPage(
   ),
   # main body
   dashboardBody(
-  #Multiple Tabs
+    tags$head(tags$style(HTML('
+      .main-header .logo {
+        font-family: "Georgia", Times, "Times New Roman", serif;
+        font-weight: bold;
+        font-size: 18px;
+      }
+    '))),
+    
     tabItems(
     #First tab is dashboard
       tabItem(tabName = "dashboard",
@@ -25,20 +32,23 @@ dashboardPage(
           ),
           # Input box 
           box(title = "Choose your interested attribute", status = "primary",
-           #selectInput("attInput", "Choose an attribute", 
-           #            choices = list("Take Out"="RestaurantsTakeOut"))
-            varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)])
+              varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)]),
+              selectInput("wordclass", "Aspect", 
+                          choices = c("Meat", "Taste"))
           ),
           
           # Result box 
           box(title = "Comparison of your chosen attribute", status = "primary",
               plotOutput("attribute")
-          )
+          ),
+          box(title = "Word in Review", status = "primary", 
+              plotOutput("meat"))
         ),
         fluidRow(
           # Suggestions
         column(width = 12,
-          box(title = "Our suggestions for you", status = "primary", width = NULL)
+          box(title = "Our suggestions for you", status = "primary", width = NULL,
+              p("These are some suggestions we want to share."))
           )
         )
       ),
@@ -47,8 +57,8 @@ dashboardPage(
       tabItem(
         tabName = "contact",
         h4("Contact Us"),
-        p("This Shiny App is created by Yuan Cao, Zeyu Li and Yuxiao Li."),
-        p("If you have any problem when using this calculator, please 
+        p("This shiny app webpage is created by Yuan Cao, Zeyu Li and Yuxiao Li."),
+        p("If you have any problem when browsing this webpage, please 
           feel free to contact us with email."),
         p("Yuxiao Li ()"),
         p("Yuan Cao (cao234@wisc.edu)"),
