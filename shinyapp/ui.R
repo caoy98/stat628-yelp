@@ -18,28 +18,23 @@ dashboardPage(
   #Multiple Tabs
     tabItems(
     #First tab is dashboard
-      tabItem(
-        tabName = "dashboard",
+      tabItem(tabName = "dashboard",
         fluidRow(
           # A simple readme
-          column(
-            width = 12,
-            box(
-              title = "Read me first",
-              status = "primary",
-              p("This website will give some suggestions about how to increase Yelp review based on analysis about Yelp data."),
-              width = NULL
+          column(width = 12,
+            box(title = "Read me first", status = "primary", width = NULL,
+              p("This website will give some suggestions about how to increase Yelp review based on analysis about Yelp data.")
             )
           ),
-          # Input box
-          box(
-            title = "Enter your information",
-            status = "primary"
+          # Input box 
+          box(title = "Choose your interested attributes", status = "primary",
+            selectInput("attInput", "Choose an attribute", 
+                        choices = list("Take Out"="RestaurantsTakeOut"))
           ),
           
           # Result box 
-          box(
-            title = "Result"
+          box(title = "Result", status = "primary",
+              plotOutput("attribute")
           ),
           
           # Suggestion box
