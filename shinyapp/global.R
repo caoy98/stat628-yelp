@@ -28,3 +28,5 @@ taste_plot = ggplot(taste_prob, aes(fill=as.factor(stars), y=prob, x=stars)) +
   theme(plot.title = element_text(color = "black", size = 12, face = "bold"), legend.position="none") +
   xlab("Star") +
   ylab("Probability")
+
+star1_plot = ggplot()

@@ -6,6 +6,7 @@ dashboardPage(
     width = 300,
     sidebarMenu(
     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
+    menuItem("Popular Words", tabName = "words", icon = icon("book")),
     menuItem("Contact Us", tabName = "contact", icon = icon("comment")),
     menuItem("Reference", tabName = "ref", icon = icon("book"))
     )
@@ -32,17 +33,20 @@ dashboardPage(
           ),
           # Input box 
           box(title = "Choose your interested attribute", status = "primary",
+              height = 500,
               varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)]),
               selectInput("wordclass", "Aspect", 
-                          choices = c("Meat", "Taste"))
+                          choices = c("Meat", "Taste")),
+              selectInput("starclass", "Star",
+                          choices = c("Star1","Star2","Star3","Star4","Star5"))
           ),
           
           # Result box 
           box(title = "Comparison of your chosen attribute", status = "primary",
-              plotOutput("attribute")
+              height = 500, plotOutput("attribute")
           ),
           box(title = "Word in Review", status = "primary", 
-              plotOutput("meat"))
+              plotOutput("word"))
         ),
         fluidRow(
           # Suggestions
@@ -51,6 +55,29 @@ dashboardPage(
               p("These are some suggestions we want to share."))
           )
         )
+      ),
+      
+      tabItem(
+        # Second tab is popular words
+        tabName = "words",
+        fluidRow(
+          # Input box 
+          box(title = "Choose your interested attribute", status = "primary",
+              height = 500,
+              varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)]),
+              selectInput("wordclass", "Aspect", 
+                          choices = c("Meat", "Taste")),
+              selectInput("starclass", "Star",
+                          choices = c("Star1","Star2","Star3","Star4","Star5"))
+          ),
+          
+          # Result box 
+          box(title = "High frequency words", status = "primary",
+              height = 500, wordcloud2Output("highfqword")
+          ),
+          box(title = "High frequency bigrams", status = "primary", 
+              wordcloud2Output(""))
+        ),
       ),
       
       # second tab is contact information
