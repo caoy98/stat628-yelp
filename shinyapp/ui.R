@@ -7,8 +7,8 @@ dashboardPage(
     sidebarMenu(
     menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
     menuItem("Popular Words", tabName = "words", icon = icon("book")),
-    menuItem("Contact Us", tabName = "contact", icon = icon("comment")),
-    menuItem("Reference", tabName = "ref", icon = icon("book"))
+    menuItem("Popular Bigrams", tabName = "bigrams", icon = icon("book")),
+    menuItem("Contact Us", tabName = "contact", icon = icon("comment"))
     )
   ),
   # main body
@@ -36,9 +36,7 @@ dashboardPage(
               height = 500,
               varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)]),
               selectInput("wordclass", "Aspect", 
-                          choices = c("Meat", "Taste")),
-              selectInput("starclass", "Star",
-                          choices = c("Star1","Star2","Star3","Star4","Star5"))
+                          choices = c("Meat", "Taste"))
           ),
           
           # Result box 
@@ -64,23 +62,31 @@ dashboardPage(
           # Input box 
           box(title = "Choose your interested attribute", status = "primary",
               height = 500,
-              varSelectInput("attInput", "Attribute:", chinese_business[, c(-1,-2)]),
-              selectInput("wordclass", "Aspect", 
-                          choices = c("Meat", "Taste")),
               selectInput("starclass", "Star",
-                          choices = c("Star1","Star2","Star3","Star4","Star5"))
+                          choices = list("Star1"=1,"Star2"=2,"Star3"=3,"Star4"=4,"Star5"=5))
           ),
           
           # Result box 
           box(title = "High frequency words", status = "primary",
-              height = 500, wordcloud2Output("highfqword")
-          ),
-          box(title = "High frequency bigrams", status = "primary", 
-              wordcloud2Output(""))
-        ),
+              height = 500, wordcloud2Output("starword")
+          )
+        )
       ),
       
-      # second tab is contact information
+      tabItem(
+        tabName = "bigrams",
+        fluidRow(
+          # Input box 
+          box(title = "Choose your interested attribute", status = "primary",
+              selectInput("starclassbigram", "Star",
+                          choices = list("Star1"=1,"Star2"=2,"Star3"=3,"Star4"=4,"Star5"=5))
+          ),
+          box(title = "High frequency bigrams", status = "primary", 
+              wordcloud2Output("starbigram"))
+        )
+      ),
+      
+      # third tab is contact information
       tabItem(
         tabName = "contact",
         h4("Contact Us"),
@@ -90,13 +96,6 @@ dashboardPage(
         p("Yuxiao Li ()"),
         p("Yuan Cao (cao234@wisc.edu)"),
         p("Zeyu Li ()")
-      ),
-      
-      # third tab contains some references
-      tabItem(
-        tabName = "ref",
-        h4("Reference"),
-        p("Siri W. E. The gross composition of the body. Advances in Biological and Medical Physics. 1956; 4:239–280.")
       )
     )
   )

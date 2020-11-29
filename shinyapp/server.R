@@ -16,20 +16,22 @@ shinyServer(function(input,output){
     if (input$wordclass == "Taste")  {print(taste_plot)}  
   })
   
-  output$star = renderPlot({
-    if (input$starclass == "Star1")  {print(star1_plot)}
-    if (input$starclass == "Star2")  {print(star2_plot)}
-    if (input$starclass == "Star3")  {print(star3_plot)}
-    if (input$starclass == "Star4")  {print(star4_plot)}
-    if (input$starclass == "Star5")  {print(star5_plot)}
-  })
-  
-  
-  output$highfqword = renderPlot({
-    review_words_counts = review_filtered %>%
+  output$starword = renderWordcloud2({
+    word_star_counts = word_filtered %>%
+      filter(stars==input$starclass) %>%
       count(word, sort = T) %>%
       top_n(100)
     
-    wordcloud2(review_words_counts, size = 1)
+    wordcloud2(word_star_counts, size = 0.5)
+  })
+  
+  
+  output$starbigram = renderWordcloud2({
+    bigram_star_counts = bigram_filtered %>%
+      filter(stars==input$starclassbigram) %>%
+      count(bigram, sort = T) %>%
+      top_n(100)
+    
+    wordcloud2(bigram_star_counts, size = 0.5)
   })
 })
