@@ -12,13 +12,7 @@ shinyServer(function(input,output){
   
   # review word analysis
   output$meat <- renderPlot({
-    ggplot(food_prob, aes(fill=stars, y=frequency, x=stars)) + 
-      geom_bar(position="dodge", stat="identity") +
-      scale_fill_viridis(discrete = T, option = "E") +
-      ggtitle("Probability") +
-      facet_wrap(~meat) +
-      theme_ipsum() +
-      theme(plot.title = element_text(color = "black", size = 12, face = "bold"), legend.position="none") +
-      xlab("")
+    if (input$wordclass == "Meat")  {print(meat_plot)}   
+    if (input$wordclass == "Taste")  {print(taste_plot)}  
   })
 })
