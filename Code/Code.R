@@ -7,6 +7,7 @@ ch_review$stars = as.factor(ch_review$stars)
 undesirable_words = c("food", "chinese", "restaurant", "chicken", 
                       "restaurants") # These words basically are in similar probabilities for all stars
 taste_words = c("sweet", "sour", "salty", "spicy", "bitter")
+service_words = c("parking", "lot", "valet", "garage", "validated", "tip", "wifi", "service", "WIFI", "WiFi")
 
 ######### single words and bigrams (n*p matrix from Yuxiao) ##############
 
@@ -20,12 +21,16 @@ review_filtered = ch_review %>%
   unnest_tokens(word, text) %>%
   anti_join(stop_words) %>%
   distinct() %>%
-  filter(nchar(word) > 10) %>%
+  filter(nchar(word) >= 3) %>%
   filter(!word %in% undesirable_words)
 
 # specific tastes
 review_taste_filtered = review_filtered %>%
   filter(word %in% taste_words)
+
+# specific service
+review_service_filtered = review_filtered %>%
+  filter(word %in% service_words)
 
 # plot of word counts for all stars
 review_filtered %>%
@@ -63,10 +68,19 @@ popular_words = review_filtered %>%
 popular_taste_words = review_taste_filtered %>% 
   group_by(stars) %>%
   count(word, stars, sort = TRUE) %>%
-  slice(seq_len(10)) %>%
+  mutate(prob = n/sum(n)) %>%
   ungroup() %>%
-  arrange(stars,n) %>%
-  mutate(row = row_number()) 
+  arrange(word,stars)
+#saveRDS(popular_taste_words, file = "shinyapp/data/taste.rds")
+
+# popular service words
+popular_service_words = review_service_filtered %>% 
+  group_by(stars) %>%
+  count(word, stars, sort = TRUE) %>%
+  mutate(prob = n/sum(n)) %>%
+  ungroup() %>%
+  arrange(word,stars)
+saveRDS(popular_service_words, file = "shinyapp/data/service.rds")
 
 # visualization for different stars
 popular_words %>%
