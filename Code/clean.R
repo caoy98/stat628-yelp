@@ -10,10 +10,8 @@ chineseind = grep(paste(chineseid, collapse = '|'), review$business_id)
 chinese_review = review[chineseind, ]
 
 # add category to review
-chinese_review$category = chinese_review$business_id
-for (i in 1:length(chineseid)) {
-  chinese_review$category = gsub(chineseid[i], chinese$categories[i], chinese_review$category)
-}
+nm = c("categories", "city", "state", "latitude", "longitude")
+chinese_review[nm] = lapply(nm, function(x) chinese[[x]][match(chinese_review$business_id, chinese$business_id)])
 
 # write to json and csv file
 write_json(chinese_review, path = "chinese_review.json")
