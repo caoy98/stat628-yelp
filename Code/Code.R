@@ -55,6 +55,15 @@ review_words_counts = review_filtered %>%
 
 wordcloud2(review_words_counts, size = 1)
 
+review_words_star1_counts = review_filtered %>%
+  filter(stars==1) %>%
+  count(word, sort = T) %>%
+  top_n(100)
+
+saveRDS(review_words_star1_counts, file = "shinyapp/data/star1_word_counts")
+wordcloud2(review_words_counts, size = 1)
+
+
 # popular words for different stars
 popular_words = review_filtered %>% 
   group_by(stars) %>%
@@ -65,12 +74,13 @@ popular_words = review_filtered %>%
   mutate(row = row_number()) 
 
 # popular taste words for stars
-popular_taste_words = review_taste_filtered %>% 
+popular_taste_words = review_filtered %>% 
   group_by(stars) %>%
   count(word, stars, sort = TRUE) %>%
   mutate(prob = n/sum(n)) %>%
   ungroup() %>%
-  arrange(word,stars)
+  arrange(word,stars) %>%
+  filter(word %in% taste_words)
 #saveRDS(popular_taste_words, file = "shinyapp/data/taste.rds")
 
 # popular service words
@@ -120,15 +130,16 @@ review_bigrams = ch_review %>%
   filter(!word2 %in% undesirable_words) %>%
   unite(bigram, word1, word2, sep = " ")
 
+saveRDS(popular_bigrams, file = "shinyapp/data/bigram_filtered.rds")
+
 
 popular_bigrams = review_bigrams %>% 
   group_by(stars) %>%
   count(bigram, stars, sort = TRUE) %>%
   mutate(prob = n/sum(n)) %>%
-  top_n(n=10, wt = prob) %>%
+  top_n(n=100, wt = prob) %>%
   ungroup() %>%
-  arrange(stars,prob) %>%
-  mutate(row = row_number()) 
+  arrange(stars,prob)
 
 popular_bigrams %>%
   ggplot(aes(row, n, fill = stars)) +
