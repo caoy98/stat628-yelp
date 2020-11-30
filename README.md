@@ -1,6 +1,6 @@
 <center>
 
-<img src="Image/hong-teh-chinese-restaurant.jpg">
+<img src="Image/Chinese Rest.jpg">
 
 </center>
 
