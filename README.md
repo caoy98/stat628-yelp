@@ -1,8 +1,4 @@
-<center>
 
-<img src="Image/Chinese Rest.jpg">
-
-</center>
 
 # Yelp's Review Analysis-Chinese Restaurants
 The Purpose of this project is to extract insightful ideas from our Yelp's review dataset to generate helpful advice for business owners increasing their rating scores on Yelp.
