@@ -1,7 +1,7 @@
 
 
 # Yelp's Review Analysis-Chinese Restaurants
-The Purpose of this project is to extract insightful ideas from our Yelp's review dataset to generate helpful advice for business owners increasing their rating scores on Yelp.
+The Purpose of this project is to extract insightful ideas from our Yelp's review dataset and generate helpful advice for business owners increasing their rating scores on Yelp.
 
 ## Repository Contents
 There are three folders and three files in our repository named `Stat628-yelp`
