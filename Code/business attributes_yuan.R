@@ -60,7 +60,7 @@ kruskal.test(stars~WiFi, data = attributes_star) # significant (p=0.04848)
 
 # ordinal logistic regression
 
-attributes_star_mod = attributes_star
+attributes_star_mod = attributes_star[,-1]
 attributes_star_mod$stars = factor(attributes_star_mod$stars, ordered = T)
 
 model = polr(stars~., Hess = T,
