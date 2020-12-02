@@ -16,7 +16,7 @@ There are three folders and three files in our repository named `Stat628-yelp`
 ## Directions of Using Code
 We compliled our program in **R Studio**.
 To run our program, you need to follow the steps described below
-- Installed packages `jsonlite`, `tidytext`, `dplyr`, `stringr`, `plyr`, `wordcloud2, `ggplot2`, `magrittr`, `tidyr`, `rlist`, `gridExtra` on your R Studio
+- Installed packages `jsonlite`, `tidytext`, `dplyr`, `stringr`, `plyr`, `wordcloud2`, `ggplot2`, `magrittr`, `tidyr`, `rlist`, `gridExtra` on your R Studio
 - And then, You need to set up the working directory to main directory
 - After you achieved the first two steps, you will be good to run our program :)
 
