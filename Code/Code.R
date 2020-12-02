@@ -1,12 +1,11 @@
 # read Chinese restaurants review file and load packages
 library(tidytext); library(dplyr); library(wordcloud2); library(ggplot2); library(tidyr)
 ch_review = read.csv("chinese_review.csv", stringsAsFactors = F)
-ch_review$stars = as.factor(ch_review$stars)
 
 # undesirable_words and target taste words
 undesirable_words = c("food", "chinese", "restaurant", "chicken", 
                       "restaurants") # These words basically are in similar probabilities for all stars
-taste_words = c("sweet", "sour", "salty", "spicy", "bitter")
+taste_words = c("sweet", "sour", "salty", "spicy", "bitter", "umami")
 service_words = c("parking", "lot", "valet", "garage", "validated", "tip", "wifi", "service", "WIFI", "WiFi")
 
 ######### single words and bigrams (n*p matrix from Yuxiao) ##############
@@ -14,7 +13,7 @@ service_words = c("parking", "lot", "valet", "garage", "validated", "tip", "wifi
 wordList <- c("sweet","sour","spicy","salty")
 plotWordStar(stars = stars,DTM = review_word_df,wordList = wordList)
 
-#########  words ###############
+#########  words ############
 
 # tokenization of review text and filter words
 review_filtered = ch_review %>%
@@ -28,41 +27,11 @@ review_filtered = ch_review %>%
 review_taste_filtered = review_filtered %>%
   filter(word %in% taste_words)
 
-# specific service
-review_service_filtered = review_filtered %>%
-  filter(word %in% service_words)
-
-# plot of word counts for all stars
-review_filtered %>%
-  count(word, sort = T) %>%
-  top_n(10) %>%
-  ungroup() %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot() +
-  geom_col(aes(word, n)) +
-  theme(legend.position = "none", 
-        plot.title = element_text(hjust = 0.5),
-        panel.grid.major = element_blank()) +
-  xlab("") + 
-  ylab("Song Count") +
-  ggtitle("Most Frequently Used Words in Prince Lyrics") +
-  coord_flip()
-
 # word cloud for all words
 review_words_counts = review_filtered %>%
   count(word, sort = T) %>%
   top_n(100)
-
 wordcloud2(review_words_counts, size = 1)
-
-review_words_star1_counts = review_filtered %>%
-  filter(stars==1) %>%
-  count(word, sort = T) %>%
-  top_n(100)
-
-saveRDS(review_words_star1_counts, file = "shinyapp/data/star1_word_counts")
-wordcloud2(review_words_counts, size = 1)
-
 
 # popular words for different stars
 popular_words = review_filtered %>% 
@@ -83,15 +52,6 @@ popular_taste_words = review_filtered %>%
   filter(word %in% taste_words)
 #saveRDS(popular_taste_words, file = "shinyapp/data/taste.rds")
 
-# popular service words
-popular_service_words = review_service_filtered %>% 
-  group_by(stars) %>%
-  count(word, stars, sort = TRUE) %>%
-  mutate(prob = n/sum(n)) %>%
-  ungroup() %>%
-  arrange(word,stars)
-saveRDS(popular_service_words, file = "shinyapp/data/service.rds")
-
 # visualization for different stars
 popular_words %>%
   ggplot(aes(row, n, fill = stars)) +
@@ -106,16 +66,14 @@ popular_words %>%
   coord_flip()
 
 popular_taste_words %>%
-  ggplot(aes(row, n, fill = stars)) +
-  geom_col(show.legend = NULL) +
-  labs(x = NULL, y = "Song Count") +
-  ggtitle("Popular Words by Chart Level") + 
-  theme_text() +  
-  facet_wrap(~stars, scales = "free") +
-  scale_x_continuous(  # This handles replacement of row 
-    breaks = popular_taste_words$row, # notice need to reuse data frame
-    labels = popular_taste_words$word) +
-  coord_flip()
+  ggplot(aes(y=prob, x=stars)) + 
+  geom_bar(stat="identity") +
+  ggtitle("Probability of Taste Words") +
+  facet_wrap(~word) +
+  theme_light() +
+  theme(plot.title = element_text(color = "black", size = 12, face = "bold"), legend.position="none") +
+  labs(x = "Star", y = "Probability") 
+  ggsave(filename = "Image/Tastes-DiffStars_Barplot.png", dpi = 300)
 
 
 ################ bigrams #######################
@@ -131,7 +89,6 @@ review_bigrams = ch_review %>%
   unite(bigram, word1, word2, sep = " ")
 
 saveRDS(popular_bigrams, file = "shinyapp/data/bigram_filtered.rds")
-
 
 popular_bigrams = review_bigrams %>% 
   group_by(stars) %>%
@@ -152,4 +109,3 @@ popular_bigrams %>%
     breaks = popular_bigrams$row, # notice need to reuse data frame
     labels = popular_bigrams$bigram) +
   coord_flip()
-

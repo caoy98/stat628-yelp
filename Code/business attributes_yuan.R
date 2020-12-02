@@ -58,7 +58,6 @@ kruskal.test(stars~WiFi, data = attributes_star) # significant (p=0.04848)
 #kruskal.test(stars~state, data = chinese) # not significant (0.238)
 
 # ordinal logistic regression
-<<<<<<< HEAD
 attributes_star_mod = attributes_star[, c(2,4:7,9,15,18)]
 attributes_star_mod[, -c(3,8)] = sapply(attributes_star_mod[, -c(3,8)], as.numeric)
 attributes_star_mod[, -c(3,8)] = attributes_star_mod[, -c(3,8)]-1
@@ -66,10 +65,8 @@ attributes_star_mod$NoiseLevel = factor(attributes_star_mod$NoiseLevel, levels =
 attributes_star_mod$NoiseLevel = as.numeric(attributes_star_mod$NoiseLevel)
 attributes_star_mod$WiFi = factor(attributes_star_mod$WiFi, levels = c("'paid'", "'no'", "'free'"), ordered = T)
 attributes_star_mod$WiFi = as.numeric(attributes_star_mod$WiFi)
-=======
 
 attributes_star_mod = attributes_star[,-1]
->>>>>>> 3b4619d1360615b0e16cb9c3d921b8afc8ef8000
 attributes_star_mod$stars = factor(attributes_star_mod$stars, ordered = T)
 
 model = polr(stars ~ ., Hess = T, data = attributes_star_mod)

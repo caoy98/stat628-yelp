@@ -3,16 +3,14 @@ library(jsonlite)
 review = stream_in(file("Data/review_city.json"))
 business = stream_in(file("Data/business_city.json"))
 
-# select reviews of Chinese food
-chinese = business[grep("Chinese", business$categories), ]
-chineseid = business$business_id[grep("Chinese", business$categories)]
-chineseind = grep(paste(chineseid, collapse = '|'), review$business_id)
-chinese_review = review[chineseind, ]
-
-# add category to review
+# add some business information to review file
 nm = c("categories", "city", "state", "latitude", "longitude")
-chinese_review[nm] = lapply(nm, function(x) chinese[[x]][match(chinese_review$business_id, chinese$business_id)])
+review[nm] = lapply(nm, function(x) business[[x]][match(review$business_id, business$business_id)])
+
+# select reviews with categories including "Chinese"
+chinese_business = business[grep("Chinese", business$categories), ]
+chinese_review = review[grep("Chinese", review$categories), ]
 
 # write to json and csv file
 write_json(chinese_review, path = "chinese_review.json")
-write.csv(chinese_review, file = "chinese_review.csv")
+write.csv(chinese_review, file = "chinese_review.csv", row.names = F)
