@@ -2,7 +2,6 @@
 library(ggplot2)
 library(jsonlite)
 library(MASS)
-library(ordinal)
 business = stream_in(file("Data/business_city.json"))
 
 # find all Chinese restaurants
@@ -20,7 +19,7 @@ for (i in 1:ncol(all_attributes)) {
 # combine stars and attributes, delete attributes with too many NAs
 attributes_star = cbind(chinese$business_id, chinese$stars, all_attributes[, -c(1,8,19,20:39)])
 colnames(attributes_star)[1:2] = c("business_id", "stars")
-#saveRDS(attributes_star, file = "data/chinese.rds")
+#saveRDS(attributes_star, file = "shinyapp/data/chinese.rds")
 
 # boxplot for different attributes
 for (i in c(2,3,4,9,10)) {
@@ -43,7 +42,7 @@ ggplot(data = subset(chinese, !is.na(state)), aes(x=state, y=stars, fill=state))
 ##########  tests and models of attributes  ############
 
 # attributes with 2 groups, Wilcoxon-Mann Whitney test
-#wilcox.test(stars~GoodForKids, data = attributes_star) # significant (p=0.02419), 
+wilcox.test(stars~GoodForKids, data = attributes_star) # significant (p=0.02419), 
 wilcox.test(stars~BusinessAcceptsCreditCards, data = attributes_star) # significant (p=0.03357)
 wilcox.test(stars~ByAppointmentOnly, data = attributes_star) # significant (p=0.002514)
 wilcox.test(stars~OutdoorSeating, data = attributes_star) # significant (p=0.03864)
@@ -59,16 +58,26 @@ kruskal.test(stars~WiFi, data = attributes_star) # significant (p=0.04848)
 #kruskal.test(stars~state, data = chinese) # not significant (0.238)
 
 # ordinal logistic regression
+<<<<<<< HEAD
+attributes_star_mod = attributes_star[, c(2,4:7,9,15,18)]
+attributes_star_mod[, -c(3,8)] = sapply(attributes_star_mod[, -c(3,8)], as.numeric)
+attributes_star_mod[, -c(3,8)] = attributes_star_mod[, -c(3,8)]-1
+attributes_star_mod$NoiseLevel = factor(attributes_star_mod$NoiseLevel, levels = c("'quiet'", "'average'", "'loud'", "'very_loud'"), ordered = T)
+attributes_star_mod$NoiseLevel = as.numeric(attributes_star_mod$NoiseLevel)
+attributes_star_mod$WiFi = factor(attributes_star_mod$WiFi, levels = c("'paid'", "'no'", "'free'"), ordered = T)
+attributes_star_mod$WiFi = as.numeric(attributes_star_mod$WiFi)
+=======
 
 attributes_star_mod = attributes_star[,-1]
+>>>>>>> 3b4619d1360615b0e16cb9c3d921b8afc8ef8000
 attributes_star_mod$stars = factor(attributes_star_mod$stars, ordered = T)
 
-model = polr(stars~., Hess = T,
-             data = na.omit(attributes_star_mod))
+model = polr(stars ~ ., Hess = T, data = attributes_star_mod)
 summary(model)
 
 ctable <- coef(summary(model))
 p <- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2
-
-## combined table
 ctable <- cbind(ctable, "p value" = p)
+ctable
+
+coef(model) %>% exp()
