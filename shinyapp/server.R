@@ -14,13 +14,14 @@ shinyServer(function(input,output){
   output$word <- renderPlot({
     if (input$wordclass == "Meat")  {print(meat_plot)}   
     if (input$wordclass == "Taste")  {print(taste_plot)}  
+    if (input$wordclass == "Service") {print(service_plot)}
   })
   
   output$starword = renderWordcloud2({
     word_star_counts = word_filtered %>%
       filter(stars==input$starclass) %>%
       count(word, sort = T) %>%
-      top_n(100)
+      top_n(200)
     
     wordcloud2(word_star_counts, size = 0.5)
   })
@@ -32,6 +33,6 @@ shinyServer(function(input,output){
       count(bigram, sort = T) %>%
       top_n(100)
     
-    wordcloud2(bigram_star_counts, size = 0.5)
+    wordcloud2(bigram_star_counts)
   })
 })
