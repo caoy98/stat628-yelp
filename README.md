@@ -19,7 +19,7 @@ To run our program, you need to follow the steps described below
 - Installed packages `jsonlite`, `tidytext`, `dplyr`, `stringr`, `plyr`, `wordcloud2`, `ggplot2`, `magrittr`, `tidyr`, `rlist`, `gridExtra` on your R Studio
 - And then, You need to set up the working directory to main directory
 - After you achieved the first two steps, you will be good to run our program :)
-- Due to the size our original data, we did not upload it. Thus, you might not be able to run our code for cleaning data which included in our directory `code` and the first part of `final group code.R`. However, we included our data after cleaning in main directory. You will be good to run any other codes. 
+- Due to the size our original data, we did not upload it. Thus, you might not be able to run our code for cleaning data which included in our directory `code` and the first part of `final group code.R`. However, we included our cleaned data in main directory. You will be good to run any other codes. 
 
 
 ## Shiny App Link
